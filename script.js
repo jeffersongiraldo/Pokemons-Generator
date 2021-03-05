@@ -1,94 +1,108 @@
-// Fuentes
-@font-face {
-  font-family: "Pokemon-Solid";
-  font-style: normal;
-  font-weight: normal;
-  src: url("/pokemon/fonts/Pokemon-Solid.woff") format("woff"), url("/pokemon/fonts/Pokemon-Solid.ttf") format("truetype");
-}
-
-@import url('https://fonts.googleapis.com/css2?family=RocknRoll+One&display=swap');
-
-
-.body {
-  width: 100%;
-  background-image: url(../assets/wallpaper-1.jpg);
-  // background-repeat: no-repeat;
-  background-size: cover;
-  transition: all 1s ease;
-  .header {
-    width: 100%;
-    background-color: rgb(182, 15, 15);
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    .box-img-pokeball {
-      width: 40px;
-      img {
-        width: 100%;
-        object-fit: cover;
-      }
-    }
-    .box-img-text-pokemon {
-      width:75px;
-      img {
-        width: 100%;
-        object-fit: cover;
-      }
-    }
+let body = document.querySelector('#body');
+let cont = 0;
+function changeImage() { // Funcion para cambiar imagen de fondo
+  cont = cont % 5;
+  if (cont === 0) {
+    body.style.backgroundImage = 'url(./assets/wallpaper-pokeball1.jpg)';
   }
-  .section-generate-pokemons {
-    margin-top: 125px;
-    text-align: center;
-    .btn {
-      padding: 10px 20px;
-      background-color: rgb(182, 15, 15);
-      color: #ffffff;
-      font-family: "Pokemon-Solid";
-      font-size: 30px;
-      letter-spacing: 3px;
-      border: none;
-      border-radius: 40px;
-      padding-bottom: 20px;
-      cursor: pointer;
-      margin-bottom: 30px;
-      outline: none;
-    }
-    .btnClear {
-      display: block;
-      margin: 0 auto;
-      font-size: 15px;
-      margin-bottom: 50px;
-    }
-    .ctnPokemons {
-      width: 100%;
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: space-evenly;
-    }
+  else if (cont === 1) {
+    body.style.backgroundImage = 'url(./assets/wallpaper-pokeballs.png)';
+  } 
+  else if (cont === 2) {
+    body.style.backgroundImage = 'url(./assets/wallpaper-pokemon-desktop.jpg)';
   }
+  else if (cont === 3) {
+    body.style.backgroundImage = 'url(./assets/wallpaper-pokeball2.png)';
+  } 
+  else {
+    body.style.backgroundImage = 'url(./assets/wallpaper-1.jpg)';
+  }
+  cont++;
 }
+function startProcess() {
+  setInterval(changeImage, 3000);
+}
+window.onload = startProcess();
 
-// Estilos a a caja del pokemon
-.boxPokemon {
-  width: 30%;
-  background-color:  rgba(248, 248, 248, 0.65);
-  border: 1px solid rgba(231, 228, 228, 0.75);
-  border-radius: 20px;
-  margin-bottom: 20px;
-  box-shadow: inset 0px 3px 1px 0 #000, 
-            inset 0 6px 1px 0px #ccc,
-            inset 0 9px 1.5px 0px #fff;
-}
 
-// Estilos al titulo
-.titlePokemon {
-  font-family: 'RocknRoll One', sans-serif;
-  font-size: 25px;
-  text-transform: uppercase;
-}
+// Funcionalidad para generar Pokemons 
 
-// Estilos a la imagen del pokemon
-.imgPokemon {
-  width: 100%;
-  object-fit: cover;
-}
+btnGenerate.addEventListener('click', () => {
+  const randomNumbers = [];
+  const numbers = [];
+  let btnGenerate = document.querySelector('#btnGenerate');
+  for (let i = 0; i < 10; i++) { // Ciclo para generar un array con 10 numeros aleatorios
+    let number = Math.floor(Math.random()*600);
+    randomNumbers.push(number)
+  } 
+  
+  for (let i = 0; i < 3; i++) { // Ciclo para generar un array nuevo con 3 numeros seleccionados del array anterior
+    let number = randomNumbers[Math.floor(Math.random()*10)];
+    numbers.push(number);
+  }
+
+  // Se hace el fetch del api con los 3 numeros seleccionados 
+  let pokemon1 = fetch(`https://pokeapi.co/api/v2/pokemon/${numbers[0]}`).then(response => response.json());
+  let pokemon2 = fetch(`https://pokeapi.co/api/v2/pokemon/${numbers[1]}`).then(response => response.json());
+  let pokemon3 = fetch(`https://pokeapi.co/api/v2/pokemon/${numbers[2]}`).then(response => response.json());
+  
+  // Se crea la variable que va a contener los pokemons
+  let ctnPokemons = document.getElementById('ctnPokemons');
+
+  /* // Codigo si quiero mostrar el primer pokemon que llegue
+  Promise.race([pokemon1, pokemon2, pokemon3])
+    .then(data1 => {
+      console.log(data1);
+      let data = [data1] 
+      for(let i = 0; i < data.length; i++) {
+        let element = data[i];
+        console.log(element)
+        let boxPokemon = document.createElement('div');
+        boxPokemon.setAttribute('class', 'boxPokemon');
+        let namePokemon = document.createElement('h3');
+        namePokemon.setAttribute('class', 'titlePokemon')
+        namePokemon.textContent = element.name + '&' + element.id;
+        let imgPokemon = document.createElement('img');
+        imgPokemon.setAttribute('class', 'imgPokemon')
+        imgPokemon.setAttribute('src', element.srpites.front_default);
+  
+        boxPokemon.appendChild(namePokemon);
+        boxPokemon.appendChild(imgPokemon);
+  
+        ctnPokemons.appendChild(boxPokemon);
+  
+      }
+    })
+})
+*/
+ // Si quiero mostrar de a 3 pokemons sería...
+ Promise.all([pokemon1, pokemon2, pokemon3])
+  .then(data => {
+    console.log(data); 
+    for(let i = 0; i < data.length; i++) {
+      let element = data[i];
+      console.log(element)
+      let boxPokemon = document.createElement('div');
+      boxPokemon.setAttribute('class', 'boxPokemon');
+      let namePokemon = document.createElement('h3');
+      namePokemon.setAttribute('class', 'titlePokemon')
+      namePokemon.textContent = element.name + '&' + element.id;
+      let imgPokemon = document.createElement('img');
+      imgPokemon.setAttribute('class', 'imgPokemon')
+      imgPokemon.setAttribute('src', element.sprites.front_default);
+
+      boxPokemon.appendChild(namePokemon);
+      boxPokemon.appendChild(imgPokemon);
+
+      ctnPokemons.appendChild(boxPokemon);
+
+    }
+  })
+})
+
+
+// Se crea la funcionalidad para limpiar los pokemons generados
+let btnClear = document.getElementById('btnClear');
+btnClear.addEventListener('click', () => {
+  ctnPokemons.innerHTML = "";
+})
