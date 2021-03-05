@@ -4,9 +4,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/normalize.css">
   <link rel="stylesheet" href="./css/style.css">
+  <link rel="icon" href="./assets/icon-9-pokeball.ico">
   <title>Tus Pokemon</title>
 </head>
-<body>
+<body class="body" id="body">
+  <header class="header">
+    <figure class="box-img-pokeball">
+      <img src="./assets/logo-pokemon.png" alt="Imagen de pokeball">
+    </figure>
+    <figure class="box-img-text-pokemon">
+      <img src="./assets/Logo-Text-Pokemon.png" alt="Palabra Pokemon">
+    </figure>
+  </header>
+  <section class="section-generate-pokemons">
+    <button id="btnGenerate" class="btnGenerate btn">Generate Pokemons</button>
+    <button class="btnClear btn" id="btnClear">Clear Pokedex</button>
+    <div id="ctnPokemons" class="ctnPokemons">
+    </div>
+  </section>
+  <script src="./script.js"></script>
 </body>
 </html>
